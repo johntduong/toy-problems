@@ -60,22 +60,39 @@ The basic steps are
 3. Set current to the original ahead.next node, and go back to step 1
 */
 
-const reverseNodesInKGroups = (l, k) => {
-    let resultListHead, resultListTail, formerListHead, currListHead, currListTail, curr = l, count = k;
-    while (curr) {
-        if (count === 0) {
-            count = k;
-            resultListTail.next = currListHead;
-            resultListTail = currListHead;
-        }
-
-        curr = curr.next;
+const reverseNodesInKGroups = (l, k, result) => {
+    let curr = l;
+    if (!curr) return result;
+    let ahead = scanAhead(curr, k);
+    if (ahead) {
+        if (!result) result = ahead;
+        let next = ahead.next;
+    } else {
+        return result;
     }
-    if (count > 0) {
-        // attach 
-    }
-    return resultListHead;
+    return reverseNodesInKGroups(next, k, result);
 };
+
+/* 
+Input: linked list, k
+Output: boolean that says whether there are enough nodes left to do a partial reverse
+*/
+
+/*
+Skeleton:
+1. call scanAhead on curr
+1a. if it returns nothing, attach current list to tail of result list and return the result list
+2. do a partial reverse from curr until node returned by scanAhead (be sure to remember what scan ahead's original next value was)
+3. set curr to scan ahead's original next value
+*/
+
+const scanAhead = (l, k) => {
+    if (!l) return;
+    if (k === 0) return l;
+    return scanAhead(l.next, k-1);
+}
+
+
 
 module.exports = {
 }
