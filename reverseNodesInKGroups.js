@@ -36,7 +36,7 @@ let list = {
 let k = 3;
 
 /* 
-Input: linked list (current node), k, counter, resultListHead, resultListTail, currListHead, currListTail
+Input: linked list (current node), k
 Output: linked list reversed in k groups
 Constraints: O(N) time, O(1) additional space, 1 <= k <= l size
 Edge Cases:
@@ -45,11 +45,10 @@ Edge Cases:
 
 /*
 Skeleton:
-0. if node is null, attach non-reversed head of kGroup to end of resultList (resultListTail)
-1. if counter is 0, return attach currList to end of resultList (resultListTail), reset count to k
-2. if currList is empty, set new head of kGroup and tail of kGroup
-3. attach node to end of current reversed kGroup list and make it new tail of kGroup
-4. Call function again on next node with k decremented
+1. find the node that is K nodes away, if there is one
+2. if nodeKAhead does not exist, return the head of modified linked list
+3. if there is one, then do a partial reverse from current node to nodeKAhead
+4. update pointers and call function recursively on nodeKAhead
 */
 
 /* 
@@ -61,16 +60,18 @@ The basic steps are
 */
 
 const reverseNodesInKGroups = (l, k, result) => {
-    let curr = l;
-    if (!curr) return result;
-    let ahead = scanAhead(curr, k);
-    if (ahead) {
-        if (!result) result = ahead;
-        let next = ahead.next;
-    } else {
-        return result;
-    }
-    return reverseNodesInKGroups(next, k, result);
+    if (!l) return -1;
+    // 1. find the node that is K nodes away, if there is one
+    let ahead = scanAhead(l, k);
+    // 2. if nodeKAhead does not exist, return the head of modified linked list
+    if (!ahead) return result;
+    // 3. if there is one,
+    // 3a. if there is no result, make result equal ahead
+    if (!result) result = ahead;
+    // 3b. do a partial reverse from current node to and including ahead
+    partialReverse(l, k, ahead.next);
+    // 4. update pointers and call function recursively on nodeKAhead
+    return reverseNodesInKGroups(ahead.next, k, result);
 };
 
 /* 
@@ -87,12 +88,23 @@ Skeleton:
 */
 
 const scanAhead = (l, k) => {
-    if (!l) return;
-    if (k === 0) return l;
+    if (!l) return -1;
+    if (k === 1) return l;
     return scanAhead(l.next, k-1);
 }
 
+/* 
+IOCE
+Input: list, k, ahead node's next value,
+Output: nothing, it just reverses nodes
+*/
 
+/*
+1. if k is 0, return
+2. else 
+*/
 
 module.exports = {
+    'reverseNodesInKGroups': reverseNodesInKGroups,
+    'scanAhead': scanAhead,
 }

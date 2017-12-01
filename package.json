@@ -1,0 +1,22 @@
+{
+  "name": "toy-problems",
+  "version": "1.0.0",
+  "description": "",
+  "main": "addTwoHugeNumbers.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johntduong/toy-problems.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/johntduong/toy-problems/issues"
+  },
+  "homepage": "https://github.com/johntduong/toy-problems#readme",
+  "dependencies": {
+    "jest": "^21.2.1"
+  }
+}
