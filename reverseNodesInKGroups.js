@@ -35,74 +35,55 @@ let list = {
 
 let k = 3;
 
-/* 
-Input: linked list (current node), k
-Output: linked list reversed in k groups
-Constraints: O(N) time, O(1) additional space, 1 <= k <= l size
-Edge Cases:
-- Empty list, k = 0
-*/
+// Definition for singly-linked list:
+// function ListNode(x) {
+//   this.value = x;
+//   this.next = null;
+// }
+//
 
-/*
-Skeleton:
-1. find the node that is K nodes away, if there is one
-2. if nodeKAhead does not exist, return the head of modified linked list
-3. if there is one, then do a partial reverse from current node to nodeKAhead
-4. update pointers and call function recursively on nodeKAhead
-*/
-
-/* 
-The basic steps are
-0. Start at head node, set to current;
-1. Scan ahead K elements from current position with a separate pointer, ahead. If you reach the end, just return, because you do not have to reverse 'partial' groups.
-2. Reverse the list between your current pointer and the pointer that is K away. The only difference from a 'normal' reversing of a linked list is that you need to pay attention to what ahead.next originally pointed to. You cannot just assume it was NULL.
-3. Set current to the original ahead.next node, and go back to step 1
-*/
-
-const reverseNodesInKGroups = (l, k, result) => {
-    if (!l) return -1;
-    // 1. find the node that is K nodes away, if there is one
-    let ahead = scanAhead(l, k);
-    // 2. if nodeKAhead does not exist, return the head of modified linked list
-    if (!ahead) return result;
-    // 3. if there is one,
-    // 3a. if there is no result, make result equal ahead
-    if (!result) result = ahead;
-    // 3b. do a partial reverse from current node to and including ahead
-    partialReverse(l, k, ahead.next);
-    // 4. update pointers and call function recursively on nodeKAhead
-    return reverseNodesInKGroups(ahead.next, k, result);
+const reverseList = (list, k, headOfNextGroup, tailOfLastGroup, tailOfThisGroup, prev) => {
+    let i = k;
+    if (i === 0) {
+        if (tailOfLastGroup) {
+            tailOfLastGroup.next = prev;
+            return tailOfThisGroup;
+        }
+        return tailOfThisGroup;
+    }
+    let curr = list;
+    let next = list.next;
+    if (!prev) {
+        tailOfThisGroup = curr;
+        curr.next = headOfNextGroup;
+        prev = curr;
+        return reverseList(next, i - 1, headOfNextGroup, tailOfLastGroup, tailOfThisGroup, prev);
+    }
+    curr.next = prev;
+    prev = curr;
+    return reverseList(next, i - 1, headOfNextGroup, tailOfLastGroup, tailOfThisGroup, prev);
 };
 
-/* 
-Input: linked list, k
-Output: boolean that says whether there are enough nodes left to do a partial reverse
-*/
+const scanAhead = (node, k) => {
+    if (k === 1 || !node) {
+        return node || -1;
+    }
+    return scanAhead(node.next, k - 1);
+};
 
-/*
-Skeleton:
-1. call scanAhead on curr
-1a. if it returns nothing, attach current list to tail of result list and return the result list
-2. do a partial reverse from curr until node returned by scanAhead (be sure to remember what scan ahead's original next value was)
-3. set curr to scan ahead's original next value
-*/
 
-const scanAhead = (l, k) => {
-    if (!l) return -1;
-    if (k === 1) return l;
-    return scanAhead(l.next, k-1);
-}
+const reverseNodesInKGroups = (list, k, headOfNextGroup, tailOfLastGroup, result) => {
+    if (!list) return result || -1;
+    let ahead = scanAhead(list, k);
+    if (ahead === -1) return result || list;
+    headOfNextGroup = ahead.next;
+    if (!tailOfLastGroup) tailOfLastGroup = null;
+    if (!result) result = ahead;
+    tailOfLastGroup = reverseList(list, k, headOfNextGroup, tailOfLastGroup);
+    return reverseNodesInKGroups(headOfNextGroup, k, headOfNextGroup, tailOfLastGroup, result);
+};
 
-/* 
-IOCE
-Input: list, k, ahead node's next value,
-Output: nothing, it just reverses nodes
-*/
 
-/*
-1. if k is 0, return
-2. else 
-*/
 
 module.exports = {
     'reverseNodesInKGroups': reverseNodesInKGroups,
