@@ -21,12 +21,42 @@ Skeleton
 
 const arr = [1, 2, 3, 3, 3];
 
-const majorityElement = (nums) => {
-    let countTracker = {};
-    for (let i = 0; i < nums.length; i++) {
-        let current = nums[i];
-        countTracker[current] ? countTracker[current]++ : countTracker[current] = 1;
-        if (countTracker[nums[i]] > (nums.length / 2)) return nums[i];
+// const majorityElement = (nums) => {
+//     let countTracker = {};
+//     for (let i = 0; i < nums.length; i++) {
+//         let current = nums[i];
+//         countTracker[current] ? countTracker[current]++ : countTracker[current] = 1;
+//         if (countTracker[nums[i]] > (nums.length / 2)) return nums[i];
+//     }
+// };
+
+const majorityElement = (array) => {
+    let candidate, count = 0;
+    for (let i = 0; i < array.length; i++) {
+        if (count === 0) {
+            candidate = array[i];
+            count = 1;
+        } else {
+            if (array[i] === candidate) {
+                count++;
+            } else {
+                count--;
+            }
+        }
+    }
+
+    if (count > 0) {
+        let candidateCount = 0;
+        for (let j = 0; j < array.length; j++) {
+            if (array[j] === candidate) {
+                candidateCount++;
+            }
+        }
+        if (candidateCount > Math.floor(array.length / 2)) {
+            return candidate;
+        } else {
+            return null;
+        }
     }
 };
 
